@@ -1,3 +1,3 @@
 export function MapPlaceholder() {
-  return <p>Mapa bude připojena v E5. Žádné mapové dlaždice se nyní nestahují.</p>
+  return <p>Místní simulace pravidel nemá GPS ani mapu. Herní mapa je dostupná po připojení ke hře.</p>
 }

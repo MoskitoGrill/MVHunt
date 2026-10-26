@@ -1,0 +1,181 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "games": {
+      "$g": {
+        ".write": false,
+        ".validate": "newData.hasChildren(['schemaVersion','ownerUid','settings','members'])",
+        "schemaVersion": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()",
+          ".validate": "newData.val() === 1"
+        },
+        "ownerUid": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()",
+          ".validate": "newData.isString() && (!data.exists() || newData.val() === data.val())"
+        },
+        "settings": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()",
+          ".write": "(auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && (root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'host' || root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'deputy') && !root.child('games').child($g).child('startedAt').exists() && newData.exists()) && !root.child('games').child($g).child('lobbyVersion').exists()",
+          ".validate": "newData.hasChildren(['headStartMs','huntIntervalMs','huntDurationMs','headIntervalMs','maxAgeMs','lateArrivalMs'])",
+          "headStartMs": {
+            ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 86400000"
+          },
+          "huntIntervalMs": {
+            ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 1000 && newData.val() <= 86400000"
+          },
+          "huntDurationMs": {
+            ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 1 && newData.val() <= 86400000"
+          },
+          "headIntervalMs": {
+            ".validate": "newData.isNumber() && newData.val() % 1 === 0 && (newData.val() === 0 || (newData.val() >= 1000 && newData.val() <= 86400000))"
+          },
+          "maxAgeMs": {
+            ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 60000"
+          },
+          "lateArrivalMs": {
+            ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 30000"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "members": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()",
+          "$uid": {
+            ".write": "(auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && (root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'host' || root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'deputy') && !root.child('games').child($g).child('startedAt').exists() && $uid !== root.child('games').child($g).child('ownerUid').val() && newData.exists()) && !root.child('games').child($g).child('lobbyVersion').exists()",
+            ".validate": "newData.hasChildren(['role']) && (root.child('games').child($g).exists() || ($uid === auth.uid && newData.child('role').val() === 'host'))",
+            "role": {
+              ".validate": "newData.val() === 'hunter' || newData.val() === 'fugitive' || newData.val() === 'deputy' || (newData.val() === 'host' && $uid === newData.parent().parent().parent().child('ownerUid').val())"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "startedAt": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()",
+          ".write": "(auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && (root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'host' || root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'deputy') && !data.exists() && newData.exists()) && !root.child('games').child($g).child('lobbyVersion').exists()",
+          ".validate": "newData.isNumber() && newData.val() === now"
+        },
+        "private": {
+          "$uid": {
+            ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && auth.uid === $uid",
+            "$id": {
+              ".write": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && auth.uid === $uid && !data.exists() && newData.exists() && root.child('games').child($g).child('startedAt').exists() && now >= root.child('games').child($g).child('startedAt').val() && now < (root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() + root.child('games').child($g).child('settings').child('huntDurationMs').val()) && !root.child('games').child($g).child('round').child('endedAt').exists() && (!root.child('games').child($g).child('lobbyVersion').exists() || !root.child('games').child($g).child('round').child('captures').child(root.child('games').child($g).child('members').child(auth.uid).child('playerId').val()).exists() || root.child('games').child($g).child('round').child('captures').child(root.child('games').child($g).child('members').child(auth.uid).child('playerId').val()).child('correctedAt').exists())",
+              ".validate": "newData.hasChildren(['lat','lng','accuracy','measuredAt','receivedAt']) && newData.child('measuredAt').val() <= now && newData.child('receivedAt').val() === now",
+              "lat": {
+                ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+              },
+              "lng": {
+                ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+              },
+              "accuracy": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+              },
+              "measuredAt": {
+                ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 9007199254740991"
+              },
+              "receivedAt": {
+                ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 9007199254740991"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          }
+        },
+        "slots": {
+          "$at": {
+            "$uid": {
+              ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && root.child('games').child($g).child('startedAt').exists() && data.child('at').val() > root.child('games').child($g).child('startedAt').val() && data.child('at').val() < (root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() + root.child('games').child($g).child('settings').child('huntDurationMs').val()) && ((data.child('at').val() === root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val()) || (data.child('at').val() > root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() && (data.child('at').val() - root.child('games').child($g).child('startedAt').val() - root.child('games').child($g).child('settings').child('headStartMs').val()) % root.child('games').child($g).child('settings').child('huntIntervalMs').val() === 0) || (root.child('games').child($g).child('settings').child('headIntervalMs').val() > 0 && data.child('at').val() < root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() && (data.child('at').val() - root.child('games').child($g).child('startedAt').val()) % root.child('games').child($g).child('settings').child('headIntervalMs').val() === 0)) && now >= data.child('at').val() && (!root.child('games').child($g).child('round').child('endedAt').exists() || data.child('at').val() < root.child('games').child($g).child('round').child('endedAt').val()) && (!root.child('games').child($g).child('round').child('captures').child($uid).exists() || root.child('games').child($g).child('round').child('captures').child($uid).child('correctedAt').exists() || data.child('at').val() < root.child('games').child($g).child('round').child('captures').child($uid).child('at').val())",
+              ".write": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && (auth != null && root.child('games').child($g).child('members').child(auth.uid).child('playerId').val() === $uid || (!root.child('games').child($g).child('lobbyVersion').exists() && auth.uid === $uid)) && (root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'fugitive' || root.child('games').child($g).child('members').child(auth.uid).child('team').val() === 'fugitive') && !data.exists() && newData.exists() && root.child('games').child($g).child('startedAt').exists() && newData.child('at').val() > root.child('games').child($g).child('startedAt').val() && newData.child('at').val() < (root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() + root.child('games').child($g).child('settings').child('huntDurationMs').val()) && ((newData.child('at').val() === root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val()) || (newData.child('at').val() > root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() && (newData.child('at').val() - root.child('games').child($g).child('startedAt').val() - root.child('games').child($g).child('settings').child('headStartMs').val()) % root.child('games').child($g).child('settings').child('huntIntervalMs').val() === 0) || (root.child('games').child($g).child('settings').child('headIntervalMs').val() > 0 && newData.child('at').val() < root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() && (newData.child('at').val() - root.child('games').child($g).child('startedAt').val()) % root.child('games').child($g).child('settings').child('headIntervalMs').val() === 0)) && now >= newData.child('at').val() - root.child('games').child($g).child('settings').child('maxAgeMs').val() && now <= newData.child('at').val() + root.child('games').child($g).child('settings').child('lateArrivalMs').val() && now < (root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() + root.child('games').child($g).child('settings').child('huntDurationMs').val()) && !root.child('games').child($g).child('round').child('endedAt').exists() && (!root.child('games').child($g).child('lobbyVersion').exists() || !root.child('games').child($g).child('round').child('captures').child(root.child('games').child($g).child('members').child(auth.uid).child('playerId').val()).exists() || root.child('games').child($g).child('round').child('captures').child(root.child('games').child($g).child('members').child(auth.uid).child('playerId').val()).child('correctedAt').exists())",
+              ".validate": "newData.hasChildren(['lat','lng','accuracy','measuredAt','receivedAt']) && newData.child('measuredAt').val() <= now && newData.child('receivedAt').val() === now && $at === newData.child('at').val() + '' && newData.child('measuredAt').val() >= newData.child('at').val() - root.child('games').child($g).child('settings').child('maxAgeMs').val() && newData.child('measuredAt').val() <= newData.child('at').val()",
+              "lat": {
+                ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+              },
+              "lng": {
+                ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+              },
+              "accuracy": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+              },
+              "measuredAt": {
+                ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 9007199254740991"
+              },
+              "receivedAt": {
+                ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 9007199254740991"
+              },
+              "$other": {
+                ".validate": false
+              },
+              "at": {
+                ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 9007199254740991"
+              }
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        },
+        "lobbyVersion": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()",
+          ".validate": false
+        },
+        "requests": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && (root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'host' || root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'deputy')",
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid"
+          }
+        },
+        "audit": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && (root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'host' || root.child('games').child($g).child('members').child(auth.uid).child('role').val() === 'deputy')"
+        },
+        "presence": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()",
+          "$uid": {
+            ".write": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && auth.uid === $uid && newData.exists()",
+            ".validate": "newData.hasChildren(['online','at'])",
+            "online": {
+              ".validate": "newData.isBoolean()"
+            },
+            "at": {
+              ".validate": "newData.isNumber() && newData.val() === now"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "allies": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && root.child('games').child($g).child('members').child(auth.uid).child('team').val() === 'hunter'",
+          "$uid": {
+            ".write": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists() && auth != null && root.child('games').child($g).child('members').child(auth.uid).child('playerId').val() === $uid && root.child('games').child($g).child('members').child(auth.uid).child('team').val() === 'hunter' && root.child('games').child($g).child('startedAt').exists() && now >= root.child('games').child($g).child('startedAt').val() && now < (root.child('games').child($g).child('startedAt').val() + root.child('games').child($g).child('settings').child('headStartMs').val() + root.child('games').child($g).child('settings').child('huntDurationMs').val()) && newData.exists() && !root.child('games').child($g).child('round').child('endedAt').exists() && (!root.child('games').child($g).child('lobbyVersion').exists() || !root.child('games').child($g).child('round').child('captures').child(root.child('games').child($g).child('members').child(auth.uid).child('playerId').val()).exists() || root.child('games').child($g).child('round').child('captures').child(root.child('games').child($g).child('members').child(auth.uid).child('playerId').val()).child('correctedAt').exists())",
+            ".validate": "newData.hasChildren(['lat','lng','accuracy','measuredAt','receivedAt']) && newData.child('measuredAt').val() <= now && newData.child('receivedAt').val() === now && newData.child(\"measuredAt\").val() >= now - 60000 && (!data.exists() || newData.child(\"measuredAt\").val() >= data.child(\"measuredAt\").val())",
+            "lat": {
+              ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+            },
+            "lng": {
+              ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+            },
+            "accuracy": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+            },
+            "measuredAt": {
+              ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 9007199254740991"
+            },
+            "receivedAt": {
+              ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 9007199254740991"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "round": {
+          ".read": "auth != null && root.child('games').child($g).child('members').child(auth.uid).exists()"
+        }
+      }
+    }
+  }
+}

@@ -9,24 +9,34 @@
   },
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "lobby:server": "node server/index.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit -p tsconfig.rules.json",
     "lint": "eslint .",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest run src",
+    "test:watch": "vitest src",
+    "test:rules": "firebase emulators:exec --project demo-mvhunt --only database,auth \"vitest run --config vitest.rules.config.ts\"",
+    "emulators": "firebase emulators:start --project demo-mvhunt --only database,auth",
+    "test:rules:isolated": "firebase emulators:exec --config firebase.test.json --project demo-mvhunt --only database,auth \"vitest run --config vitest.rules.config.ts\""
   },
   "dependencies": {
+    "firebase": "13.1.0",
+    "firebase-admin": "14.5.0",
+    "leaflet": "1.9.4",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@firebase/rules-unit-testing": "6.0.0",
+    "@types/leaflet": "1.9.21",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.2",
     "eslint": "10.13.0",
     "eslint-plugin-react-hooks": "7.1.1",
+    "firebase-tools": "15.34.1",
     "globals": "17.13.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.0",

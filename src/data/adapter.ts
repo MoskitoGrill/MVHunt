@@ -11,7 +11,7 @@ export function createDemoAdapter(): DemoAdapter {
 export type DataState =
   | { kind: 'demo'; snapshot: DemoSnapshot }
   | { kind: 'unconfigured'; missing: string[] }
-  | { kind: 'unavailable' }
+  | { kind: 'configured' }
   | { kind: 'invalid-mode'; value: string }
 
 const firebaseKeys = [
@@ -26,5 +26,5 @@ export function resolveDataState(env: Record<string, unknown>, demoRequested = f
   }
   if (mode && mode !== 'production') return { kind: 'invalid-mode', value: String(mode) }
   const missing = firebaseKeys.filter(key => typeof env[key] !== 'string' || !env[key].trim())
-  return missing.length ? { kind: 'unconfigured', missing } : { kind: 'unavailable' }
+  return missing.length ? { kind: 'unconfigured', missing } : { kind: 'configured' }
 }

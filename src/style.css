@@ -4,3 +4,11 @@ main { max-width: 44rem; margin: auto; padding: 1.25rem; overflow-wrap: anywhere
 section { border: 1px solid #9ba5af; padding: 1rem; margin-block: 1.5rem; background: white; }
 button { min-height: 48px; padding: .75rem 1rem; font: inherit; cursor: pointer; }
 button:focus-visible { outline: 3px solid #075bb5; outline-offset: 3px; }
+label { display: block; margin-block: .75rem; }
+input, select { display: block; min-height: 44px; max-width: 100%; font: inherit; }
+button { margin: .25rem; }
+button:disabled { cursor: default; }
+.pocket { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; box-sizing: border-box; margin: 0; border: 0; padding: max(1.5rem, env(safe-area-inset-top)) 1.5rem; background: #080c10; color: #bac4ce; overscroll-behavior: contain; }
+.pocket::backdrop { background: #080c10; }
+.pocket button { background: #202a34; color: #fff; border: 2px solid #8795a3; }
+.hold-unlock { touch-action: none; user-select: none; -webkit-user-select: none; min-height: 80px; }

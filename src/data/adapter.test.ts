@@ -12,9 +12,9 @@ describe('výběr datového režimu', () => {
   it('chybný režim se nezmění potichu na demo', () => {
     expect(resolveDataState({ VITE_DATA_MODE: 'typo' }).kind).toBe('invalid-mode')
   })
-  it('ani úplná konfigurace neslibuje implementovaný backend', () => {
+  it('úplná konfigurace připraví explicitní připojení', () => {
     const env = Object.fromEntries(['API_KEY', 'AUTH_DOMAIN', 'PROJECT_ID', 'DATABASE_URL', 'APP_ID'].map(key => [`VITE_FIREBASE_${key}`, 'example']))
-    expect(resolveDataState(env).kind).toBe('unavailable')
+    expect(resolveDataState(env).kind).toBe('configured')
     expect(resolveDataState({ ...env, VITE_FIREBASE_API_KEY: ' ' }).kind).toBe('unconfigured')
   })
 })
