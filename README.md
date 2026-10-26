@@ -30,6 +30,8 @@ Pokud na tomto počítači instalace hlásí `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, 
 
 ## Kontroly a produkční sestavení
 
+Před zveřejněním: `pnpm audit:public`; kontrola serveru bez externích služeb: `pnpm test:server`. Report přípravy hostingu a nález metadat v historii: [PUBLICATION-REVIEW.md](PUBLICATION-REVIEW.md). Veřejná liveness cesta API je `/healthz`; nenahrazuje ověření Firebase spojení.
+
 ```powershell
 pnpm lint
 pnpm typecheck

@@ -24,7 +24,7 @@ jobs:
           node-version: '24'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint && pnpm typecheck && pnpm test
+      - run: pnpm audit:public && pnpm lint && pnpm typecheck && pnpm test && pnpm test:server
       - run: pnpm build
         env:
           MVHUNT_BASE: /${{ github.event.repository.name }}/

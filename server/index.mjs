@@ -17,6 +17,11 @@ const execute = createLobbyService(getDatabase(app))
 const origin = local ? (process.env.LOBBY_ORIGIN ?? 'http://localhost:5173') : process.env.LOBBY_ORIGIN
 const server = createServer(async (req,res) => {
   res.setHeader('Cache-Control','no-store'); res.setHeader('Vary','Origin')
+  // Liveness only: no credentials, database reads or game details.
+  if ((req.method === 'GET' || req.method === 'HEAD') && req.url === '/healthz') {
+    res.setHeader('Content-Type','application/json; charset=utf-8')
+    res.writeHead(200).end(req.method === 'HEAD' ? undefined : JSON.stringify({status:'ok'})); return
+  }
   const allowed = req.headers.origin === origin
   if (allowed) res.setHeader('Access-Control-Allow-Origin',origin)
   if (req.method === 'OPTIONS' && allowed) {
@@ -36,4 +41,7 @@ const server = createServer(async (req,res) => {
   } catch (e) { res.writeHead(400).end(JSON.stringify({ error: e instanceof Error ? e.message : 'Operace selhala.' })) }
 })
 server.requestTimeout = 15000
-server.listen(Number(process.env.PORT ?? 8787),'127.0.0.1',() => console.log('Lobby API připraveno na loopback portu 8787.'))
+const host = local ? '127.0.0.1' : '0.0.0.0'
+const port = Number(process.env.PORT ?? 8787)
+if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT musí být celé číslo 1–65535.')
+server.listen(port,host,() => console.log(`Lobby API připraveno na ${host}:${port}.`))

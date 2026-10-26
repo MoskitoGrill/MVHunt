@@ -79,6 +79,8 @@ Doporučené pořadí: E1–E10 → V1 → O1 → E11. V1 a O1 jsou samostatné 
 **Ověření:** duplicita chycení, oprava, souběh konce a chycení, lovec uspí klienta přes dvě odhalení a po návratu vidí správný stav; odchod vedoucího nezastaví čas; nové kolo bez mazání.
 
 ## E7 – PWA a kapesní režim
+**Krok 6 – GitHub (26. 10. 2026):** načten origin a znovu ověřena lokální historie; API GitHubu potvrzuje soukromý repozitář a oprávnění pro push. Připraven commit hostingových úprav a kontrol. Přepnutí na public zbývá potvrdit kvůli e-mailu autora v existující historii; fyzické/HTTPS ověření dál čeká.
+**Doplnění 26. 10. 2026 – příprava nasazení, bod 1:** dokončena lokální kontrola souborů/historie a hostingová úprava API + `/healthz`; nález e-mailu v metadatech a výsledky v `PUBLICATION-REVIEW.md`. Žádné zveřejnění/nasazení ani uzavření fyzických kritérií; E7 nadále ČEKÁ NA OVĚŘENÍ.
 **Předání E6 (26. 10. 2026):** lokální klasické kolo implementováno, 51 unit a 32 skutečných emulátorových testů; prohlížeč ověřil dialogy, opravu, konec, reload a nové kolo se zachováním starého. E6 čeká na fyzické uspání/GPS/offline dvou telefonů a vlastní externí konfiguraci. Pravidla, data, příkazy a ruční scénář v server/ROUND.md. E7 lze zahájit lokálně, fyzické kritérium E6 nepřeskakovat.
 - Pro první potřebné HTTPS testy použít plánovaný GitHub Pages; tehdy připravit public repozitář po kontrole souborů i historie na tajemství a osobní data. Ověřit Vite base, manifest start_url/scope, service worker a reload na skutečné podcestě repozitáře. Plán není provedené nasazení.
 **Výsledek:** instalovatelná aplikace s ochranou dotyků a testem probouzení.

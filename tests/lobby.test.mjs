@@ -267,6 +267,13 @@ it('HTTP API ověřuje skutečný Auth token; bez tokenu a s falešným UID nepr
   const processApi = spawn(process.execPath,['server/index.mjs'],{ env:{ ...process.env,LOBBY_EMULATORS:'true',PORT:'8788' },stdio:['ignore','pipe','pipe'] })
   try {
     await Promise.race([once(processApi.stdout,'data'),new Promise((_,reject) => setTimeout(() => reject(new Error('API se nespustilo')),8000))])
+    const health = await fetch('http://127.0.0.1:8788/healthz')
+    expect(health.status).toBe(200)
+    expect(health.headers.get('cache-control')).toBe('no-store')
+    expect(await health.json()).toEqual({status:'ok'})
+    const head = await fetch('http://127.0.0.1:8788/healthz',{method:'HEAD'})
+    expect(head.status).toBe(200); expect(await head.text()).toBe('')
+    expect((await fetch('http://127.0.0.1:8788/healthz',{method:'POST'})).status).toBe(403)
     const post = (token,body,action='create') => fetch(`http://127.0.0.1:8788/api/lobby/${action}`,{ method:'POST',headers:{ 'Content-Type':'application/json',...(token ? { Authorization:`Bearer ${token}` } : {}) },body:JSON.stringify(body) })
     expect((await post('',{})).ok).toBe(false)
     expect((await post('fake',{})).ok).toBe(false)
