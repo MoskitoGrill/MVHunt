@@ -1,6 +1,6 @@
 # E7 – PWA, kapesní zámek a telefonní ověření
 
-Stav 26. 10. 2026: **ČEKÁ NA OVĚŘENÍ**. Lokální implementace a automatické testy nejsou fyzický telefon. Žádné zveřejnění repozitáře, Pages deployment ani změna tarifu nebyly provedeny.
+Stav 26. 10. 2026: **ČEKÁ NA OVĚŘENÍ**. Lokální implementace a automatické testy nejsou fyzický telefon. V navazujícím kroku 6 byl repozitář MoskitoGrill/MVHunt zveřejněn a změny odeslány do main; Pages/API deployment ani změna tarifu nebyly provedeny.
 
 ## Kontrakt
 
@@ -32,7 +32,7 @@ Node/pnpm bez PATH: použijte cestu runtime a nastavení PATH popsané v README;
 
 Ověřený remote: `https://github.com/MoskitoGrill/MVHunt.git`. Očekávaná adresa po skutečném nasazení: `https://moskitogrill.github.io/MVHunt/` (**zatím není potvrzena jako dostupná**).
 
-1. Před prvním zveřejněním zkontrolovat pracovní soubory **i celou Git historii**, ignorované soubory, screenshoty, fixture, případné přesné polohy a serverové přihlašovací údaje. Lokální kontrola provedena 26. 10. 2026: bez nálezu detekovaných formátů klíčů/tokenů, ale v commit metadatech je e-mail autora mimo GitHub noreply. Výsledek, rozsah a rozhodnutí před zveřejněním viz `../../PUBLICATION-REVIEW.md`. Audit opakovat po změnách a prověřit případné další vzdálené větve. Necommitovat `.env.local`, ADC, service accounts nebo reálné trasy. Public změna/nasazení v tomto chatu neprovedeny.
+1. Kontrola před prvním zveřejněním provedena 26. 10. 2026 a zopakována po `git fetch origin`: bez nálezu detekovaných formátů klíčů/tokenů, e-mail autora v commit metadatech byl výslovně oznámen. V navazujícím kroku 6 zveřejněn repozitář a odeslána main, ověřeno API i bez přihlášení; viz `../../PUBLICATION-REVIEW.md`. Audit opakovat po změnách a prověřit nové vzdálené větve. Necommitovat `.env.local`, ADC, service accounts nebo reálné trasy. Pages/API deployment zatím neproveden.
 2. Po kontrole a skutečném zveřejnění nastavit v GitHub Settings → Pages → Source: GitHub Actions. Workflow `.github/workflows/pages.yml` běží **jen ručním workflow_dispatch**. Výchozí `publish=false` pouze sestaví a uloží Pages artifact; `publish=true` nasazuje přes environment `github-pages`. Lze přidat required reviewer v prostředí podle možností účtu. Workflow zde nebyl na GitHubu spuštěn.
 3. Bez veřejných proměnných lze otestovat PWA se správnou diagnostikou chybějící konfigurace a výslovnou místní demonstrací. Takový test neprokazuje online hru. Workflow předává base automaticky podle názvu repozitáře; pro současný remote `/MVHunt/`. U user-site repozitáře nebo vlastní domény se base musí upravit.
 4. Pro skutečný lov: vlastní nový Firebase Spark, anonymous Auth, aktuální rules (`pnpm exec firebase deploy --only database --project VLASTNI_PROJECT_ID`) a autorizovaný hostname `moskitogrill.github.io`; nasazené důvěryhodné HTTPS API s přesným `LOBBY_ORIGIN=https://moskitogrill.github.io` (origin bez podcesty), vlastním DB URL a serverovým ADC dle `server/README.md`. Hosting API nadále není vybrán/ověřen a představuje externí blok E4. Žádné Blaze ani placení.

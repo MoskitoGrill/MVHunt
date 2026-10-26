@@ -1,6 +1,6 @@
 # Příprava testovacího nasazení – bod 1
 
-Navazující krok 6 (26. 10. 2026): uživatel zadal odeslání připravených změn do GitHubu. `git fetch origin` proběhl, vzdálená main odpovídala místní revizi 7fe59f9; GitHub API potvrdilo private repozitář a právo push/admin. Opakovaný audit nezjistil detekované formáty tajemství. Commit/push se připravuje jako samostatný navazující krok; public přepnutí čeká na výslovné rozhodnutí o e-mailu autora v historii. Původní výsledek kontroly níže je historický stav bodu 1.
+Navazující krok 6 (26. 10. 2026): HOTOVO. Uživatel zadal provést krok 6 včetně zveřejnění po kontrole. `git fetch origin` proběhl, vzdálená main odpovídala místní revizi 7fe59f9; opakovaný audit nezjistil detekované formáty tajemství. Commit `7f9b4a4` (hosting API, health, testy, audit a návody) úspěšně odeslán do main. Poté repozitář MoskitoGrill/MVHunt přepnut z private na public přes GitHub API; při žádosti o vykonání výslovně uvedeno zveřejnění zdrojů, historie a autorského e-mailu. API potvrdilo private=false / visibility=public. Historie se nepřepisovala. Původní výsledek kontroly níže je historický stav bodu 1; audit nadále opakovat po změnách. Veřejný repozitář není nasazená aplikace: Pages workflow ani externí API nebyly spuštěny/nasazeny.
 
 Kontrola provedena 26. 10. 2026. Technická příprava bodu 1 dokončena; žádný commit, push, změna viditelnosti, nasazení ani účet nebyly provedeny.
 
